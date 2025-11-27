@@ -9,10 +9,12 @@ import '../screens/login_screen.dart';
 import '../screens/register_screen.dart';
 import '../screens/profile_screen.dart';
 import '../providers/auth_provider.dart';
+import '../models/expense.dart';
 
 class AppRoutes {
   static const String home = '/';
   static const String addExpense = '/add-expense';
+  static const String addIncome = '/add-income';
   static const String expenseList = '/expense-list';
   static const String incomeList = '/income-list';
   static const String reports = '/reports';
@@ -49,7 +51,12 @@ class AppRoutes {
         GoRoute(
           path: addExpense,
           name: 'addExpense',
-          builder: (context, state) => const AddExpenseScreen(),
+          builder: (context, state) => const AddExpenseScreen(initialType: TransactionType.expense),
+        ),
+        GoRoute(
+          path: addIncome,
+          name: 'addIncome',
+          builder: (context, state) => const AddExpenseScreen(initialType: TransactionType.income),
         ),
         GoRoute(
           path: expenseList,

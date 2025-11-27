@@ -191,7 +191,7 @@ class HomeScreen extends StatelessWidget {
                         child: Card(
                           color: Colors.green.shade50,
                           child: InkWell(
-                            onTap: () => context.push(AppRoutes.addExpense),
+                            onTap: () => context.push(AppRoutes.addIncome),
                             borderRadius: BorderRadius.circular(12),
                             child: Padding(
                               padding: const EdgeInsets.all(16),
@@ -236,7 +236,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'Toque para adicionar',
+                                    'Toque para adicionar receita',
                                     style: TextStyle(
                                       fontSize: 11,
                                       color: Colors.green.shade600.withValues(alpha: 0.7),
@@ -299,7 +299,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'Toque para adicionar',
+                                    'Toque para adicionar despesa',
                                     style: TextStyle(
                                       fontSize: 11,
                                       color: Colors.red.shade600.withValues(alpha: 0.7),

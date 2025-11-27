@@ -8,8 +8,9 @@ import '../providers/expense_provider.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   final String? expenseId;
+  final TransactionType? initialType;
 
-  const AddExpenseScreen({super.key, this.expenseId});
+  const AddExpenseScreen({super.key, this.expenseId, this.initialType});
 
   @override
   State<AddExpenseScreen> createState() => _AddExpenseScreenState();
@@ -22,7 +23,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   final _descriptionController = TextEditingController();
   
   // FR01: Tipo de transação (Receita ou Despesa)
-  TransactionType _selectedType = TransactionType.expense;
+  late TransactionType _selectedType;
   String _selectedCategory = 'alimentacao';
   DateTime _selectedDate = DateTime.now();
   bool _isEditing = false;
@@ -30,6 +31,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   @override
   void initState() {
     super.initState();
+    _selectedType = widget.initialType ?? TransactionType.expense;
     if (widget.expenseId != null) {
       _isEditing = true;
       _loadExpense();

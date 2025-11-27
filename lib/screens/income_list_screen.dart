@@ -167,7 +167,8 @@ class IncomeListScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push(AppRoutes.addExpense),
+        onPressed: () => context.push(AppRoutes.addIncome),
+        backgroundColor: Colors.green,
         child: const Icon(Icons.add),
       ),
     );
