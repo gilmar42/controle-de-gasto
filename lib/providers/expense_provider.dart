@@ -63,6 +63,7 @@ class ExpenseProvider with ChangeNotifier {
   }
 
   void _loadSampleData() {
+    // Sample data sem userId para manter compatibilidade com dados antigos
     _transactions.addAll([
       Transaction(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -72,6 +73,7 @@ class ExpenseProvider with ChangeNotifier {
         category: 'outros',
         date: DateTime.now(),
         description: 'Salário do mês',
+        userId: null,
       ),
       Transaction(
         id: (DateTime.now().millisecondsSinceEpoch + 1).toString(),
@@ -81,6 +83,7 @@ class ExpenseProvider with ChangeNotifier {
         category: 'outros',
         date: DateTime.now().subtract(const Duration(days: 2)),
         description: 'Projeto freelance',
+        userId: null,
       ),
       Transaction(
         id: (DateTime.now().millisecondsSinceEpoch + 2).toString(),
@@ -90,6 +93,7 @@ class ExpenseProvider with ChangeNotifier {
         category: 'alimentacao',
         date: DateTime.now().subtract(const Duration(days: 1)),
         description: 'Compras do mês',
+        userId: null,
       ),
       Transaction(
         id: (DateTime.now().millisecondsSinceEpoch + 3).toString(),
@@ -99,6 +103,7 @@ class ExpenseProvider with ChangeNotifier {
         category: 'moradia',
         date: DateTime.now().subtract(const Duration(days: 3)),
         description: 'Aluguel mensal',
+        userId: null,
       ),
       Transaction(
         id: (DateTime.now().millisecondsSinceEpoch + 4).toString(),
@@ -108,6 +113,7 @@ class ExpenseProvider with ChangeNotifier {
         category: 'transporte',
         date: DateTime.now(),
         description: 'Combustível',
+        userId: null,
       ),
     ]);
   }

@@ -72,6 +72,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         description: _descriptionController.text.isEmpty 
             ? null 
             : _descriptionController.text,
+        userId: null, // User isolation can be added by provider
       );
 
       // Mostrar indicador de carregamento

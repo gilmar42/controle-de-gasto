@@ -16,6 +16,7 @@ class Transaction {
   final String category;
   final DateTime date;
   final String? description;
+  final String? userId;
 
   Transaction({
     required this.id,
@@ -25,6 +26,7 @@ class Transaction {
     required this.category,
     required this.date,
     this.description,
+    this.userId,
   });
 
   Map<String, dynamic> toMap() {
@@ -36,6 +38,7 @@ class Transaction {
       'category': category,
       'date': date.toIso8601String(),
       'description': description,
+      'userId': userId,
     };
   }
 
@@ -48,6 +51,7 @@ class Transaction {
       category: map['category'],
       date: DateTime.parse(map['date']),
       description: map['description'],
+      userId: map['userId'],
     );
   }
 
@@ -59,6 +63,7 @@ class Transaction {
     String? category,
     DateTime? date,
     String? description,
+    String? userId,
   }) {
     return Transaction(
       id: id ?? this.id,
@@ -68,6 +73,7 @@ class Transaction {
       category: category ?? this.category,
       date: date ?? this.date,
       description: description ?? this.description,
+      userId: userId ?? this.userId,
     );
   }
 }
