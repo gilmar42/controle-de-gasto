@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Include all SharedPreferences -->
+    <include domain="sharedpref" path="."/>
+    <!-- (Optional) include app files if you store user data outside prefs
+    <include domain="file" path="files/"/> -->
+</full-backup-content>
