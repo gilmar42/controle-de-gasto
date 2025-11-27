@@ -9,6 +9,12 @@ class ExpenseProvider with ChangeNotifier {
   bool _isInitialized = false;
 
   List<Transaction> get transactions => [..._transactions];
+    // Lista somente de receitas
+    List<Transaction> get incomeTransactions =>
+      _transactions.where((t) => t.type == TransactionType.income).toList();
+    // Lista somente de despesas
+    List<Transaction> get expenseTransactions =>
+      _transactions.where((t) => t.type == TransactionType.expense).toList();
   bool get isLoading => _isLoading;
   bool get isInitialized => _isInitialized;
 

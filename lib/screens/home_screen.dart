@@ -348,6 +348,15 @@ class HomeScreen extends StatelessWidget {
                           onTap: () => context.push(AppRoutes.reports),
                         ),
                       ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _MenuCard(
+                          icon: Icons.arrow_upward,
+                          title: 'Receitas',
+                          color: Colors.green.shade700,
+                          onTap: () => context.push(AppRoutes.incomeList),
+                        ),
+                      ),
                     ],
                   ),
                 ),
