@@ -191,26 +191,29 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // FR01: Seletor de Tipo de Transação
-              SegmentedButton<TransactionType>(
-                segments: const [
-                  ButtonSegment(
-                    value: TransactionType.income,
-                    label: Text('Receita'),
-                    icon: Icon(Icons.arrow_upward),
-                  ),
-                  ButtonSegment(
-                    value: TransactionType.expense,
-                    label: Text('Despesa'),
-                    icon: Icon(Icons.arrow_downward),
-                  ),
-                ],
-                selected: {_selectedType},
-                onSelectionChanged: (Set<TransactionType> newSelection) {
-                  setState(() {
-                    _selectedType = newSelection.first;
-                  });
-                },
+              // Badge indicando tipo de transação (Despesa)
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.red.shade200),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.arrow_downward, color: Colors.red.shade700),
+                    const SizedBox(width: 8),
+                    Text(
+                      'DESPESA',
+                      style: TextStyle(
+                        color: Colors.red.shade700,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 16),
               

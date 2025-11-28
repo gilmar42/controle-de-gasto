@@ -67,8 +67,7 @@ flutter_launcher_icons:
   windows:
     generate: true
     image_path: "assets/images/app_icon.svg"
-  adaptive_icon_background: "#4CAF50"
-  adaptive_icon_foreground: "assets/images/app_icon_foreground.png"
+  # adaptive icons desabilitados (usando image_path padrão)
 
 # Splash screen
 flutter_native_splash:
