@@ -1,0 +1,16 @@
+<svg width="1024" height="1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fundo verde -->
+  <rect width="1024" height="1024" fill="#4CAF50" rx="180"/>
+  
+  <!-- Círculo branco -->
+  <circle cx="512" cy="512" r="380" fill="#FFFFFF"/>
+  
+  <!-- Símbolo R$ -->
+  <text x="512" y="650" font-family="Arial, sans-serif" font-size="420" font-weight="bold" fill="#4CAF50" text-anchor="middle">R$</text>
+  
+  <!-- Seta para cima (receita) -->
+  <path d="M 400 320 L 350 370 L 390 370 L 390 450 L 410 450 L 410 370 L 450 370 Z" fill="#4CAF50" opacity="0.8"/>
+  
+  <!-- Seta para baixo (despesa) -->
+  <path d="M 624 704 L 674 654 L 634 654 L 634 574 L 614 574 L 614 654 L 574 654 Z" fill="#F44336" opacity="0.8"/>
+</svg>

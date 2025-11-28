@@ -1,0 +1,16 @@
+# Configuração do instalador MSIX
+# Gerar com: dart run msix:create
+
+display_name: Controle de Gastos
+publisher_display_name: Gilmar Apps
+identity_name: com.gilmar.controledegastos
+publisher: CN=Gilmar Dutra
+logo_path: assets/images/app_icon.png
+install_certificate: false
+languages: pt-BR
+description: Aplicativo para controle de receitas e despesas pessoais.
+architecture: x64
+version: 1.0.0.0
+protocol_activation: false
+icons_background_color: "#4CAF50"
+startup_task: false

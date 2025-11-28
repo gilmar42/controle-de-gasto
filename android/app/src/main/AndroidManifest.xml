@@ -16,7 +16,7 @@
         android:anyDensity="true" />
 
     <application
-        android:label="controle_gasto"
+        android:label="Controle de Gastos"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="true"

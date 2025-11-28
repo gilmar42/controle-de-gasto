@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.controle_gasto"
+        applicationId = "com.gilmar.controledegastos"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -37,13 +37,14 @@ android {
     }
 
     buildTypes {
-        release {
-            // Disable shrinking/obfuscation for stability (re-enable after confirming bundle build)
+        // Usar assinatura debug até keystore real ser configurado
+        getByName("release") {
             isMinifyEnabled = false
-            // Explicitly disable resource shrinking to match minify setting
             isShrinkResources = false
-            // Temporary signing with debug keystore; replace with release config when you add keystore
             signingConfig = signingConfigs.getByName("debug")
+        }
+        getByName("debug") {
+            // nada extra
         }
     }
 
