@@ -6,35 +6,31 @@ import '../models/expense.dart';
 import '../models/category.dart';
 import '../providers/expense_provider.dart';
 
-class AddExpenseScreen extends StatefulWidget {
-  final String? expenseId;
-  final TransactionType? initialType;
+class AddIncomeScreen extends StatefulWidget {
+  final String? incomeId;
 
-  const AddExpenseScreen({super.key, this.expenseId, this.initialType});
+  const AddIncomeScreen({super.key, this.incomeId});
 
   @override
-  State<AddExpenseScreen> createState() => _AddExpenseScreenState();
+  State<AddIncomeScreen> createState() => _AddIncomeScreenState();
 }
 
-class _AddExpenseScreenState extends State<AddExpenseScreen> {
+class _AddIncomeScreenState extends State<AddIncomeScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
   
-  // FR01: Tipo de transação (Receita ou Despesa)
-  late TransactionType _selectedType;
-  String _selectedCategory = 'alimentacao';
+  String _selectedCategory = 'outros';
   DateTime _selectedDate = DateTime.now();
   bool _isEditing = false;
 
   @override
   void initState() {
     super.initState();
-    _selectedType = widget.initialType ?? TransactionType.expense;
-    if (widget.expenseId != null) {
+    if (widget.incomeId != null) {
       _isEditing = true;
-      _loadExpense();
+      _loadIncome();
     }
     // Listeners para atualizar UI quando texto muda
     _titleController.addListener(() => setState(() {}));
@@ -42,15 +38,14 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     _descriptionController.addListener(() => setState(() {}));
   }
 
-  void _loadExpense() {
+  void _loadIncome() {
     final provider = Provider.of<ExpenseProvider>(context, listen: false);
-    final transaction = provider.getTransactionById(widget.expenseId!);
+    final transaction = provider.getTransactionById(widget.incomeId!);
     
-    if (transaction != null) {
+    if (transaction != null && transaction.type == TransactionType.income) {
       _titleController.text = transaction.title;
       _amountController.text = transaction.amount.toString();
       _descriptionController.text = transaction.description ?? '';
-      _selectedType = transaction.type;
       _selectedCategory = transaction.category;
       _selectedDate = transaction.date;
     }
@@ -69,19 +64,18 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       final provider = Provider.of<ExpenseProvider>(context, listen: false);
       
       final transaction = Transaction(
-        id: _isEditing ? widget.expenseId! : DateTime.now().toString(),
+        id: _isEditing ? widget.incomeId! : DateTime.now().toString(),
         title: _titleController.text,
         amount: double.parse(_amountController.text.replaceAll(',', '.')),
-        type: _selectedType,
+        type: TransactionType.income,
         category: _selectedCategory,
         date: _selectedDate,
         description: _descriptionController.text.isEmpty 
             ? null 
             : _descriptionController.text,
-        userId: null, // User isolation can be added by provider
+        userId: null,
       );
 
-      // Mostrar indicador de carregamento
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -92,12 +86,12 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
       try {
         if (_isEditing) {
-          await provider.updateTransaction(widget.expenseId!, transaction);
+          await provider.updateTransaction(widget.incomeId!, transaction);
           if (mounted) {
-            Navigator.of(context).pop(); // Fechar diálogo
+            Navigator.of(context).pop();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Transação atualizada com sucesso!'),
+                content: Text('Receita atualizada com sucesso!'),
                 backgroundColor: Colors.green,
               ),
             );
@@ -105,10 +99,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         } else {
           await provider.addTransaction(transaction);
           if (mounted) {
-            Navigator.of(context).pop(); // Fechar diálogo
+            Navigator.of(context).pop();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Transação adicionada com sucesso!'),
+                content: Text('Receita adicionada com sucesso!'),
                 backgroundColor: Colors.green,
               ),
             );
@@ -120,7 +114,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         }
       } catch (e) {
         if (mounted) {
-          Navigator.of(context).pop(); // Fechar diálogo
+          Navigator.of(context).pop();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Erro ao salvar: $e'),
@@ -152,7 +146,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Editar Transação' : 'Adicionar Transação'),
+        title: Text(_isEditing ? 'Editar Receita' : 'Adicionar Receita'),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
         actions: [
           if (_isEditing)
             IconButton(
@@ -162,7 +158,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   context: context,
                   builder: (ctx) => AlertDialog(
                     title: const Text('Confirmar exclusão'),
-                    content: const Text('Deseja realmente excluir esta transação?'),
+                    content: const Text('Deseja realmente excluir esta receita?'),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(ctx),
@@ -171,11 +167,11 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                       TextButton(
                         onPressed: () {
                           Provider.of<ExpenseProvider>(context, listen: false)
-                              .deleteTransaction(widget.expenseId!);
+                              .deleteTransaction(widget.incomeId!);
                           Navigator.pop(ctx);
                           context.pop();
                         },
-                        child: const Text('Excluir'),
+                        child: const Text('Excluir', style: TextStyle(color: Colors.red)),
                       ),
                     ],
                   ),
@@ -191,26 +187,29 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // FR01: Seletor de Tipo de Transação
-              SegmentedButton<TransactionType>(
-                segments: const [
-                  ButtonSegment(
-                    value: TransactionType.income,
-                    label: Text('Receita'),
-                    icon: Icon(Icons.arrow_upward),
-                  ),
-                  ButtonSegment(
-                    value: TransactionType.expense,
-                    label: Text('Despesa'),
-                    icon: Icon(Icons.arrow_downward),
-                  ),
-                ],
-                selected: {_selectedType},
-                onSelectionChanged: (Set<TransactionType> newSelection) {
-                  setState(() {
-                    _selectedType = newSelection.first;
-                  });
-                },
+              // Badge indicando tipo de transação
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.green.shade200),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.arrow_upward, color: Colors.green.shade700),
+                    const SizedBox(width: 8),
+                    Text(
+                      'RECEITA',
+                      style: TextStyle(
+                        color: Colors.green.shade700,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 16),
               
@@ -226,7 +225,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           tooltip: 'Limpar',
                           icon: const Icon(Icons.close),
                           onPressed: () {
-                            setState(() => _titleController.clear());
+                            _titleController.clear();
                           },
                         ),
                 ),
@@ -252,7 +251,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           tooltip: 'Limpar',
                           icon: const Icon(Icons.close),
                           onPressed: () {
-                            setState(() => _amountController.clear());
+                            _amountController.clear();
                           },
                         ),
                 ),
@@ -270,7 +269,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               const SizedBox(height: 16),
               
               DropdownButtonFormField<String>(
-                initialValue: _selectedCategory,
+                value: _selectedCategory,
                 decoration: const InputDecoration(
                   labelText: 'Categoria',
                   border: OutlineInputBorder(),
@@ -324,7 +323,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           tooltip: 'Limpar',
                           icon: const Icon(Icons.close),
                           onPressed: () {
-                            setState(() => _descriptionController.clear());
+                            _descriptionController.clear();
                           },
                         ),
                 ),
@@ -336,13 +335,15 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 onPressed: _submitForm,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 child: Text(
-                  _isEditing ? 'Atualizar Transação' : 'Adicionar Transação',
-                  style: const TextStyle(fontSize: 16),
+                  _isEditing ? 'Atualizar Receita' : 'Adicionar Receita',
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ],

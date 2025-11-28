@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/home_screen.dart';
 import '../screens/add_expense_screen.dart';
+import '../screens/add_income_screen.dart';
 import '../screens/expense_list_screen.dart';
 import '../screens/income_list_screen.dart';
 import '../screens/reports_screen.dart';
@@ -19,6 +20,7 @@ class AppRoutes {
   static const String incomeList = '/income-list';
   static const String reports = '/reports';
   static const String editExpense = '/edit-expense';
+  static const String editIncome = '/edit-income';
   static const String login = '/login';
   static const String register = '/register';
   static const String profile = '/profile';
@@ -56,7 +58,7 @@ class AppRoutes {
         GoRoute(
           path: addIncome,
           name: 'addIncome',
-          builder: (context, state) => const AddExpenseScreen(initialType: TransactionType.income),
+          builder: (context, state) => const AddIncomeScreen(),
         ),
         GoRoute(
           path: expenseList,
@@ -79,6 +81,14 @@ class AppRoutes {
           builder: (context, state) {
             final expenseId = state.pathParameters['id']!;
             return AddExpenseScreen(expenseId: expenseId);
+          },
+        ),
+        GoRoute(
+          path: '$editIncome/:id',
+          name: 'editIncome',
+          builder: (context, state) {
+            final incomeId = state.pathParameters['id']!;
+            return AddIncomeScreen(incomeId: incomeId);
           },
         ),
         GoRoute(

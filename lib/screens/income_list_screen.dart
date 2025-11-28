@@ -152,8 +152,8 @@ class IncomeListScreen extends StatelessWidget {
                             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
                           ),
                           onTap: () {
-                            // Navigate to edit screen
-                            context.push('${AppRoutes.editExpense}/${t.id}');
+                            // Navigate to edit income screen
+                            context.push('${AppRoutes.editIncome}/${t.id}');
                           },
                         ),
                       ),
