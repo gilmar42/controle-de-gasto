@@ -6,7 +6,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-void main() {
+  void main() {
   runApp(const IconGeneratorApp());
 }
 
@@ -15,7 +15,7 @@ class IconGeneratorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
         body: Center(
           child: IconGenerator(),
@@ -123,13 +123,13 @@ class _IconGeneratorState extends State<IconGenerator> {
         child: Stack(
           children: [
             // R$ principal
-            Center(
+            const Center(
               child: Text(
                 'R\$',
                 style: TextStyle(
                   fontSize: 320,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF4CAF50),
+                  color: Color(0xFF4CAF50),
                   height: 1.2,
                 ),
               ),

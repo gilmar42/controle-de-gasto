@@ -36,7 +36,7 @@ void main() {
       );
     });
 
-    testWidgets('should display Lucro Líquido', (WidgetTester tester) async {
+    testWidgets('should display Saldo na Conta', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ChangeNotifierProvider(
@@ -46,7 +46,7 @@ void main() {
         ),
       );
 
-      expect(find.text('Lucro Líquido'), findsOneWidget);
+      expect(find.text('Saldo na Conta'), findsOneWidget);
     });
 
     testWidgets('should display Receitas and Despesas cards',

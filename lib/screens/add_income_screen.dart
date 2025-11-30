@@ -20,8 +20,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
-  String _selectedCategory = 'outros';
+
+  String _selectedCategory = 'salario';
+  String? _selectedSubcategory; // Subopções quando categoria for "outros"
   DateTime _selectedDate = DateTime.now();
   bool _isEditing = false;
 
@@ -41,12 +42,16 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
   void _loadIncome() {
     final provider = Provider.of<ExpenseProvider>(context, listen: false);
     final transaction = provider.getTransactionById(widget.incomeId!);
-    
+
     if (transaction != null && transaction.type == TransactionType.income) {
       _titleController.text = transaction.title;
       _amountController.text = transaction.amount.toString();
       _descriptionController.text = transaction.description ?? '';
-      _selectedCategory = transaction.category;
+      // Garantir que a categoria carregada exista na lista de receitas
+      final validIncomeIds = Category.incomeCategories.map((c) => c.id).toSet();
+      _selectedCategory = validIncomeIds.contains(transaction.category)
+          ? transaction.category
+          : 'salario';
       _selectedDate = transaction.date;
     }
   }
@@ -62,16 +67,22 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final provider = Provider.of<ExpenseProvider>(context, listen: false);
-      
+
+      // Se a categoria for "outros", salvar a subcategoria escolhida
+      final String categoryToSave =
+          _selectedCategory == 'outros' && _selectedSubcategory != null
+              ? _selectedSubcategory!
+              : _selectedCategory;
+
       final transaction = Transaction(
         id: _isEditing ? widget.incomeId! : DateTime.now().toString(),
         title: _titleController.text,
         amount: double.parse(_amountController.text.replaceAll(',', '.')),
         type: TransactionType.income,
-        category: _selectedCategory,
+        category: categoryToSave,
         date: _selectedDate,
-        description: _descriptionController.text.isEmpty 
-            ? null 
+        description: _descriptionController.text.isEmpty
+            ? null
             : _descriptionController.text,
         userId: null,
       );
@@ -134,7 +145,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
       lastDate: DateTime.now(),
       locale: const Locale('pt', 'BR'),
     );
-    
+
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
@@ -158,7 +169,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   context: context,
                   builder: (ctx) => AlertDialog(
                     title: const Text('Confirmar exclusão'),
-                    content: const Text('Deseja realmente excluir esta receita?'),
+                    content:
+                        const Text('Deseja realmente excluir esta receita?'),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(ctx),
@@ -171,7 +183,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                           Navigator.pop(ctx);
                           context.pop();
                         },
-                        child: const Text('Excluir', style: TextStyle(color: Colors.red)),
+                        child: const Text('Excluir',
+                            style: TextStyle(color: Colors.red)),
                       ),
                     ],
                   ),
@@ -212,7 +225,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _titleController,
                 decoration: InputDecoration(
@@ -237,7 +250,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _amountController,
                 decoration: InputDecoration(
@@ -255,7 +268,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                           },
                         ),
                 ),
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, insira um valor';
@@ -267,15 +281,16 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               DropdownButtonFormField<String>(
-                value: _selectedCategory,
+                initialValue: _selectedCategory,
                 decoration: const InputDecoration(
                   labelText: 'Categoria',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.category),
                 ),
-                items: Category.defaultCategories.map((category) {
+                // Somente categorias de receita
+                items: Category.incomeCategories.map((category) {
                   return DropdownMenuItem(
                     value: category.id,
                     child: Row(
@@ -290,11 +305,52 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 onChanged: (value) {
                   setState(() {
                     _selectedCategory = value!;
+                    // Ao trocar a categoria, resetar subcategoria
+                    if (_selectedCategory != 'outros') {
+                      _selectedSubcategory = null;
+                    }
                   });
                 },
               ),
               const SizedBox(height: 16),
-              
+
+              // Subopções quando "outros" estiver selecionado
+              if (_selectedCategory == 'outros') ...[
+                InputDecorator(
+                  decoration: const InputDecoration(
+                    labelText: 'Categoria (Outros)',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.list),
+                  ),
+                  child: Column(
+                    children: [
+                      RadioListTile<String>(
+                        title: const Text('Salário'),
+                        value: 'salario',
+                        groupValue: _selectedSubcategory,
+                        onChanged: (val) =>
+                            setState(() => _selectedSubcategory = val),
+                      ),
+                      RadioListTile<String>(
+                        title: const Text('Freelancer'),
+                        value: 'freelancer',
+                        groupValue: _selectedSubcategory,
+                        onChanged: (val) =>
+                            setState(() => _selectedSubcategory = val),
+                      ),
+                      RadioListTile<String>(
+                        title: const Text('Outra Receita'),
+                        value: 'outra_receita',
+                        groupValue: _selectedSubcategory,
+                        onChanged: (val) =>
+                            setState(() => _selectedSubcategory = val),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+
               InkWell(
                 onTap: () => _selectDate(context),
                 child: InputDecorator(
@@ -310,7 +366,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
@@ -330,7 +386,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 maxLines: 3,
               ),
               const SizedBox(height: 24),
-              
+
               ElevatedButton(
                 onPressed: _submitForm,
                 style: ElevatedButton.styleFrom(
@@ -343,7 +399,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 ),
                 child: Text(
                   _isEditing ? 'Atualizar Receita' : 'Adicionar Receita',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ],

@@ -99,7 +99,8 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
                 value: 'todos',
                 child: Text('Todos'),
               ),
-              ...Category.defaultCategories.map((category) {
+              // Apenas categorias de despesa no filtro
+              ...Category.expenseCategories.map((category) {
                 return PopupMenuItem(
                   value: category.id,
                   child: Row(
@@ -216,9 +217,10 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
                     ),
                   ),
                   ...dayTransactions.map((transaction) {
-                    final category = Category.defaultCategories.firstWhere(
+                      // Resolver categoria usando apenas categorias de despesa
+                      final category = Category.expenseCategories.firstWhere(
                       (cat) => cat.id == transaction.category,
-                      orElse: () => Category.defaultCategories.last,
+                        orElse: () => Category.expenseCategories.last,
                     );
                     final isIncome = transaction.type == TransactionType.income;
 

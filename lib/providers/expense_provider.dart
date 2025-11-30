@@ -9,11 +9,11 @@ class ExpenseProvider with ChangeNotifier {
   bool _isInitialized = false;
 
   List<Transaction> get transactions => [..._transactions];
-    // Lista somente de receitas
-    List<Transaction> get incomeTransactions =>
+  // Lista somente de receitas
+  List<Transaction> get incomeTransactions =>
       _transactions.where((t) => t.type == TransactionType.income).toList();
-    // Lista somente de despesas
-    List<Transaction> get expenseTransactions =>
+  // Lista somente de despesas
+  List<Transaction> get expenseTransactions =>
       _transactions.where((t) => t.type == TransactionType.expense).toList();
   bool get isLoading => _isLoading;
   bool get isInitialized => _isInitialized;
@@ -21,7 +21,7 @@ class ExpenseProvider with ChangeNotifier {
   // CRUD: READ - Carregar dados do SharedPreferences
   Future<void> loadTransactions() async {
     if (_isInitialized) return;
-    
+
     _isLoading = true;
     notifyListeners();
 
@@ -132,7 +132,7 @@ class ExpenseProvider with ChangeNotifier {
         .fold(0.0, (sum, transaction) => sum + transaction.amount);
   }
 
-  // FR05: Cálculo de Lucro Líquido
+  // FR05: Cálculo de Saldo na Conta
   double get netProfit {
     return totalIncome - totalExpenses;
   }
@@ -175,16 +175,17 @@ class ExpenseProvider with ChangeNotifier {
 
   Map<String, double> getExpensesByCategory() {
     Map<String, double> categoryTotals = {};
-    
-    for (var transaction in _transactions.where((t) => t.type == TransactionType.expense)) {
+
+    for (var transaction
+        in _transactions.where((t) => t.type == TransactionType.expense)) {
       if (categoryTotals.containsKey(transaction.category)) {
-        categoryTotals[transaction.category] = 
+        categoryTotals[transaction.category] =
             categoryTotals[transaction.category]! + transaction.amount;
       } else {
         categoryTotals[transaction.category] = transaction.amount;
       }
     }
-    
+
     return categoryTotals;
   }
 
@@ -197,7 +198,8 @@ class ExpenseProvider with ChangeNotifier {
 
   // CRUD: UPDATE - Atualizar transação
   Future<void> updateTransaction(String id, Transaction newTransaction) async {
-    final index = _transactions.indexWhere((transaction) => transaction.id == id);
+    final index =
+        _transactions.indexWhere((transaction) => transaction.id == id);
     if (index != -1) {
       _transactions[index] = newTransaction;
       await _saveTransactions();

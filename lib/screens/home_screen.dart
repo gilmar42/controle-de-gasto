@@ -25,7 +25,8 @@ class HomeScreen extends StatelessWidget {
               backgroundColor: Colors.blue.shade100,
               child: Text(
                 user?.name.substring(0, 1).toUpperCase() ?? 'U',
-                style: TextStyle(color: Colors.blue.shade700, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.blue.shade700, fontWeight: FontWeight.bold),
               ),
             ),
             itemBuilder: (context) => [
@@ -39,8 +40,12 @@ class HomeScreen extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(user?.name ?? '', style: const TextStyle(fontWeight: FontWeight.bold)),
-                        Text(user?.email ?? '', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                        Text(user?.name ?? '',
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(user?.email ?? '',
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.grey)),
                       ],
                     ),
                   ],
@@ -50,14 +55,23 @@ class HomeScreen extends StatelessWidget {
               PopupMenuItem<String>(
                 value: 'profile',
                 child: const Row(
-                  children: [Icon(Icons.account_circle), SizedBox(width: 8), Text('Perfil')],
+                  children: [
+                    Icon(Icons.account_circle),
+                    SizedBox(width: 8),
+                    Text('Perfil')
+                  ],
                 ),
-                onTap: () => Future.delayed(Duration.zero, () => context.push(AppRoutes.profile)),
+                onTap: () => Future.delayed(
+                    Duration.zero, () => context.push(AppRoutes.profile)),
               ),
               PopupMenuItem<String>(
                 value: 'logout',
                 child: const Row(
-                  children: [Icon(Icons.logout, color: Colors.red), SizedBox(width: 8), Text('Sair', style: TextStyle(color: Colors.red))],
+                  children: [
+                    Icon(Icons.logout, color: Colors.red),
+                    SizedBox(width: 8),
+                    Text('Sair', style: TextStyle(color: Colors.red))
+                  ],
                 ),
                 onTap: () async {
                   final confirm = await showDialog<bool>(
@@ -66,10 +80,13 @@ class HomeScreen extends StatelessWidget {
                       title: const Text('Sair'),
                       content: const Text('Deseja realmente sair?'),
                       actions: [
-                        TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancelar')),
+                        TextButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            child: const Text('Cancelar')),
                         TextButton(
                           onPressed: () => Navigator.pop(ctx, true),
-                          child: const Text('Sair', style: TextStyle(color: Colors.red)),
+                          child: const Text('Sair',
+                              style: TextStyle(color: Colors.red)),
                         ),
                       ],
                     ),
@@ -91,15 +108,14 @@ class HomeScreen extends StatelessWidget {
           final totalExpenses = expenseProvider.totalExpenses;
           final netProfit = expenseProvider.netProfit;
           final profitMargin = expenseProvider.profitMargin;
-          final recentTransactions = expenseProvider.transactions
-              .take(5)
-              .toList();
+          final recentTransactions =
+              expenseProvider.transactions.take(5).toList();
 
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // FR05: Card de Lucro Líquido (US04: cor baseada no saldo)
+                // FR05: Card de Saldo na Conta (US04: cor baseada no saldo)
                 InkWell(
                   onTap: () => context.push(AppRoutes.expenseList),
                   borderRadius: BorderRadius.circular(16),
@@ -134,7 +150,7 @@ class HomeScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              'Lucro Líquido',
+                              'Saldo na Conta',
                               style: TextStyle(
                                 color: Colors.white70,
                                 fontSize: 16,
@@ -199,7 +215,8 @@ class HomeScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         children: [
@@ -239,7 +256,8 @@ class HomeScreen extends StatelessWidget {
                                     'Toque para adicionar receita',
                                     style: TextStyle(
                                       fontSize: 11,
-                                      color: Colors.green.shade600.withValues(alpha: 0.7),
+                                      color: Colors.green.shade600
+                                          .withValues(alpha: 0.7),
                                       fontStyle: FontStyle.italic,
                                     ),
                                   ),
@@ -262,7 +280,8 @@ class HomeScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         children: [
@@ -302,7 +321,8 @@ class HomeScreen extends StatelessWidget {
                                     'Toque para adicionar despesa',
                                     style: TextStyle(
                                       fontSize: 11,
-                                      color: Colors.red.shade600.withValues(alpha: 0.7),
+                                      color: Colors.red.shade600
+                                          .withValues(alpha: 0.7),
                                       fontStyle: FontStyle.italic,
                                     ),
                                   ),
@@ -394,7 +414,8 @@ class HomeScreen extends StatelessWidget {
                     itemCount: recentTransactions.length,
                     itemBuilder: (context, index) {
                       final transaction = recentTransactions[index];
-                      final isIncome = transaction.type == TransactionType.income;
+                      final isIncome =
+                          transaction.type == TransactionType.income;
                       return Dismissible(
                         key: Key(transaction.id),
                         direction: DismissDirection.endToStart,
@@ -413,7 +434,8 @@ class HomeScreen extends StatelessWidget {
                             context: context,
                             builder: (ctx) => AlertDialog(
                               title: const Text('Excluir transação'),
-                              content: Text('Deseja excluir "${transaction.title}"?'),
+                              content: Text(
+                                  'Deseja excluir "${transaction.title}"?'),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(ctx, false),
@@ -432,12 +454,14 @@ class HomeScreen extends StatelessWidget {
                         },
                         onDismissed: (direction) async {
                           try {
-                            await Provider.of<ExpenseProvider>(context, listen: false)
+                            await Provider.of<ExpenseProvider>(context,
+                                    listen: false)
                                 .deleteTransaction(transaction.id);
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('"${transaction.title}" excluída'),
+                                  content:
+                                      Text('"${transaction.title}" excluída'),
                                   backgroundColor: Colors.green,
                                 ),
                               );
@@ -464,7 +488,9 @@ class HomeScreen extends StatelessWidget {
                                   ? Colors.green.shade100
                                   : Colors.red.shade100,
                               child: Icon(
-                                isIncome ? Icons.arrow_upward : Icons.arrow_downward,
+                                isIncome
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
                                 color: isIncome
                                     ? Colors.green.shade700
                                     : Colors.red.shade700,

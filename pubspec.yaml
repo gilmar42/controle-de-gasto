@@ -58,15 +58,15 @@ flutter:
 # Configuração do ícone do aplicativo
 flutter_launcher_icons:
   android: true
-  ios: true
+  ios: false
   image_path: "assets/images/app_icon.png"
   min_sdk_android: 21
   web:
     generate: true
-    image_path: "assets/images/app_icon.svg"
+    image_path: "assets/images/app_icon.png"
   windows:
     generate: true
-    image_path: "assets/images/app_icon.svg"
+    image_path: "assets/images/app_icon.png"
   # adaptive icons desabilitados (usando image_path padrão)
 
 # Splash screen
@@ -74,7 +74,7 @@ flutter_native_splash:
   color: "#4CAF50"
   image: assets/images/app_icon.png
   android: true
-  ios: true
+  ios: false
   web: true
   fullscreen: true
   android_gravity: center

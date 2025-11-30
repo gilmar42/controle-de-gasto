@@ -67,17 +67,22 @@ class _ReportsScreenState extends State<ReportsScreen> {
       body: Consumer<ExpenseProvider>(
         builder: (context, expenseProvider, child) {
           // FR02, FR03, FR04, FR05, FR06: Métricas do mês selecionado
-          final monthTransactions = expenseProvider.getTransactionsByMonth(_selectedMonth);
+          final monthTransactions =
+              expenseProvider.getTransactionsByMonth(_selectedMonth);
           final totalIncome = expenseProvider.getIncomeByMonth(_selectedMonth);
-          final totalExpenses = expenseProvider.getExpensesByMonth(_selectedMonth);
+          final totalExpenses =
+              expenseProvider.getExpensesByMonth(_selectedMonth);
           final netProfit = expenseProvider.getNetProfitByMonth(_selectedMonth);
-          final profitMargin = expenseProvider.getProfitMarginByMonth(_selectedMonth);
-          
+          final profitMargin =
+              expenseProvider.getProfitMarginByMonth(_selectedMonth);
+
           final categoryTotals = <String, double>{};
-          
-          for (var transaction in monthTransactions.where((t) => t.type == TransactionType.expense)) {
-            categoryTotals[transaction.category] = 
-                (categoryTotals[transaction.category] ?? 0) + transaction.amount;
+
+          for (var transaction in monthTransactions
+              .where((t) => t.type == TransactionType.expense)) {
+            categoryTotals[transaction.category] =
+                (categoryTotals[transaction.category] ?? 0) +
+                    transaction.amount;
           }
 
           if (monthTransactions.isEmpty) {
@@ -115,7 +120,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     child: Column(
                       children: [
                         Text(
-                          DateFormat('MMMM yyyy', 'pt_BR').format(_selectedMonth),
+                          DateFormat('MMMM yyyy', 'pt_BR')
+                              .format(_selectedMonth),
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -128,8 +134,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  const Icon(Icons.arrow_upward, color: Colors.green),
-                                  const Text('Receitas', style: TextStyle(fontSize: 12)),
+                                  const Icon(Icons.arrow_upward,
+                                      color: Colors.green),
+                                  const Text('Receitas',
+                                      style: TextStyle(fontSize: 12)),
                                   Text(
                                     NumberFormat.currency(
                                       locale: 'pt_BR',
@@ -144,12 +152,17 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 ],
                               ),
                             ),
-                            Container(width: 1, height: 40, color: Colors.grey.shade300),
+                            Container(
+                                width: 1,
+                                height: 40,
+                                color: Colors.grey.shade300),
                             Expanded(
                               child: Column(
                                 children: [
-                                  const Icon(Icons.arrow_downward, color: Colors.red),
-                                  const Text('Despesas', style: TextStyle(fontSize: 12)),
+                                  const Icon(Icons.arrow_downward,
+                                      color: Colors.red),
+                                  const Text('Despesas',
+                                      style: TextStyle(fontSize: 12)),
                                   Text(
                                     NumberFormat.currency(
                                       locale: 'pt_BR',
@@ -167,9 +180,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           ],
                         ),
                         const Divider(height: 24),
-                        // FR05: Lucro Líquido (US04: cor baseada no saldo)
+                        // FR05: Saldo na Conta (US04: cor baseada no saldo)
                         Text(
-                          'Lucro Líquido',
+                          'Saldo na Conta',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey.shade600,
@@ -216,36 +229,38 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   SizedBox(
                     height: 250,
                     child: PieChart(
                       PieChartData(
                         sections: categoryTotals.entries.map((entry) {
-                          final category = Category.defaultCategories.firstWhere(
+                          final category =
+                              Category.defaultCategories.firstWhere(
                             (cat) => cat.id == entry.key,
                             orElse: () => Category.defaultCategories.last,
                           );
-                          final percentage = (entry.value / totalExpenses) * 100;
+                          final percentage =
+                              (entry.value / totalExpenses) * 100;
 
-                        return PieChartSectionData(
-                          value: entry.value,
-                          title: '${percentage.toStringAsFixed(1)}%',
-                          color: category.color,
-                          radius: 100,
-                          titleStyle: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        );
-                      }).toList(),
-                      sectionsSpace: 2,
-                      centerSpaceRadius: 40,
+                          return PieChartSectionData(
+                            value: entry.value,
+                            title: '${percentage.toStringAsFixed(1)}%',
+                            color: category.color,
+                            radius: 100,
+                            titleStyle: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          );
+                        }).toList(),
+                        sectionsSpace: 2,
+                        centerSpaceRadius: 40,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
                   // Lista de categorias
                   const Text(
@@ -256,7 +271,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  
+
                   ...categoryTotals.entries.map((entry) {
                     final category = Category.defaultCategories.firstWhere(
                       (cat) => cat.id == entry.key,
@@ -264,44 +279,45 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     );
                     final percentage = (entry.value / totalExpenses) * 100;
 
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: category.color.withValues(alpha: 0.2),
-                        child: Icon(category.icon, color: category.color),
-                      ),
-                      title: Text(category.name),
-                      subtitle: LinearProgressIndicator(
-                        value: percentage / 100,
-                        backgroundColor: Colors.grey.shade200,
-                        valueColor: AlwaysStoppedAnimation(category.color),
-                      ),
-                      trailing: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            NumberFormat.currency(
-                              locale: 'pt_BR',
-                              symbol: 'R\$',
-                            ).format(entry.value),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor:
+                              category.color.withValues(alpha: 0.2),
+                          child: Icon(category.icon, color: category.color),
+                        ),
+                        title: Text(category.name),
+                        subtitle: LinearProgressIndicator(
+                          value: percentage / 100,
+                          backgroundColor: Colors.grey.shade200,
+                          valueColor: AlwaysStoppedAnimation(category.color),
+                        ),
+                        trailing: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              NumberFormat.currency(
+                                locale: 'pt_BR',
+                                symbol: 'R\$',
+                              ).format(entry.value),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
-                          ),
-                          Text(
-                            '${percentage.toStringAsFixed(1)}%',
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 12,
+                            Text(
+                              '${percentage.toStringAsFixed(1)}%',
+                              style: TextStyle(
+                                color: Colors.grey.shade600,
+                                fontSize: 12,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
+                    );
                   }),
                 ],
               ],

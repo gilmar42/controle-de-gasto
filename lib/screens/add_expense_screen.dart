@@ -21,7 +21,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   // FR01: Tipo de transação (Receita ou Despesa)
   late TransactionType _selectedType;
   String _selectedCategory = 'alimentacao';
@@ -45,7 +45,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   void _loadExpense() {
     final provider = Provider.of<ExpenseProvider>(context, listen: false);
     final transaction = provider.getTransactionById(widget.expenseId!);
-    
+
     if (transaction != null) {
       _titleController.text = transaction.title;
       _amountController.text = transaction.amount.toString();
@@ -67,7 +67,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final provider = Provider.of<ExpenseProvider>(context, listen: false);
-      
+
       final transaction = Transaction(
         id: _isEditing ? widget.expenseId! : DateTime.now().toString(),
         title: _titleController.text,
@@ -75,8 +75,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         type: _selectedType,
         category: _selectedCategory,
         date: _selectedDate,
-        description: _descriptionController.text.isEmpty 
-            ? null 
+        description: _descriptionController.text.isEmpty
+            ? null
             : _descriptionController.text,
         userId: null, // User isolation can be added by provider
       );
@@ -140,7 +140,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       lastDate: DateTime.now(),
       locale: const Locale('pt', 'BR'),
     );
-    
+
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
@@ -162,7 +162,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   context: context,
                   builder: (ctx) => AlertDialog(
                     title: const Text('Confirmar exclusão'),
-                    content: const Text('Deseja realmente excluir esta transação?'),
+                    content:
+                        const Text('Deseja realmente excluir esta transação?'),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(ctx),
@@ -216,7 +217,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _titleController,
                 decoration: InputDecoration(
@@ -241,7 +242,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _amountController,
                 decoration: InputDecoration(
@@ -259,7 +260,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           },
                         ),
                 ),
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, insira um valor';
@@ -271,7 +273,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               DropdownButtonFormField<String>(
                 initialValue: _selectedCategory,
                 decoration: const InputDecoration(
@@ -279,7 +281,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.category),
                 ),
-                items: Category.defaultCategories.map((category) {
+                // Somente categorias de despesa
+                items: Category.expenseCategories.map((category) {
                   return DropdownMenuItem(
                     value: category.id,
                     child: Row(
@@ -298,7 +301,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               InkWell(
                 onTap: () => _selectDate(context),
                 child: InputDecorator(
@@ -314,7 +317,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
@@ -334,7 +337,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 maxLines: 3,
               ),
               const SizedBox(height: 24),
-              
+
               ElevatedButton(
                 onPressed: _submitForm,
                 style: ElevatedButton.styleFrom(

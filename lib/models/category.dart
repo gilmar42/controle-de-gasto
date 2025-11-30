@@ -14,6 +14,25 @@ class Category {
   });
 
   static List<Category> defaultCategories = [
+    // Receitas comuns
+    Category(
+      id: 'salario',
+      name: 'Salário',
+      icon: Icons.payments,
+      color: Colors.green,
+    ),
+    Category(
+      id: 'freelancer',
+      name: 'Freelancer',
+      icon: Icons.work_outline,
+      color: Colors.teal,
+    ),
+    Category(
+      id: 'outra_receita',
+      name: 'Outra Receita',
+      icon: Icons.attach_money,
+      color: Colors.lightGreen,
+    ),
     Category(
       id: 'alimentacao',
       name: 'Alimentação',
@@ -57,6 +76,14 @@ class Category {
       color: Colors.grey,
     ),
   ];
+
+    // Lista apenas de categorias de receita
+    static List<Category> get incomeCategories => defaultCategories.where((c) =>
+      c.id == 'salario' || c.id == 'freelancer' || c.id == 'outra_receita').toList();
+
+    // Lista apenas de categorias de despesa
+    static List<Category> get expenseCategories => defaultCategories.where((c) =>
+      c.id != 'salario' && c.id != 'freelancer' && c.id != 'outra_receita').toList();
 
   Map<String, dynamic> toMap() {
     return {
